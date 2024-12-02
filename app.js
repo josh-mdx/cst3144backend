@@ -41,3 +41,18 @@ catch((err)=>{
 app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(bodyParser.json());
+
+
+app.get('/', (req, res)=>{
+    res.sendFile('./views/index.html', {root: __dirname});
+})
+app.get('/lessons', async (req, res)=>{
+    try {
+        const lessons = await getLessons();
+        console.log(lessons);
+        res.json(lessons);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+})
