@@ -38,13 +38,16 @@ catch((err)=>{
 })
 
 // middleware
-app.use(express.static('public'));
+
+// app.use(express.static('public'));
+app.use('/public', express.static(path.join(__dirname, '../cst3144frontend/public')));
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 
 app.get('/', (req, res)=>{
-    res.sendFile('./views/index.html', {root: __dirname});
+    // res.sendFile('../views/index.html', {root: __dirname});
+    res.sendFile(path.join(__dirname, '../cst3144frontend/views/index.html'));
 })
 app.get('/lessons', async (req, res)=>{
     try {
