@@ -129,3 +129,15 @@ app.put('/lessons', async (req,res) => {
         res.status(500).send('Error updating lessons');
     }
 })
+
+// get lessons
+
+async function getLessons() { 
+    try { 
+        const lessons = await lessonsCollection.find().toArray(); 
+        // console.log('Lessons:', lessons); 
+        return lessons
+    } 
+    catch (err) { 
+        console.error('Failed to fetch lessons:', err); 
+    }}
