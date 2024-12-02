@@ -56,3 +56,24 @@ app.get('/lessons', async (req, res)=>{
         res.sendStatus(500);
     }
 })
+app.get('/search', async (req, res)=>{
+    const query = req.query.query.toLowerCase();
+    if(!query){
+        return res.status(400).send('Query Parameter is required');
+    }
+    try {
+        const regex = new RegExp(query, 'i');
+        const searchedLessons = await lessonsCollection.find({
+            $or:[
+                {name: {$regex: regex}},
+                {locat: {$regex: regex}},
+                {price: {$regex: regex}},
+                {spaces: {$regex: regex}},
+            ]
+        }).toArray();
+        res.json(searchedLessons);
+    } catch (error) {
+        console.log(error);
+    }
+    
+})
