@@ -11,3 +11,28 @@ let db;
 let lessonsCollection;
 let ordersCollection;
 
+const app = express();
+app.listen(port, ()=>{
+    console.log(`Server is running on http://localhost:${port}`);
+});
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+client.connect()
+.then(()=>{
+    db = client.db('cst3144');
+    lessonsCollection = db.collection('lesson');
+    ordersCollection = db.collection('order');
+    console.log('Connected to MongoDB Atlas');
+    getLessons();
+
+}).
+catch((err)=>{
+    console.log(err);
+})
