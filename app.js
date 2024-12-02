@@ -30,9 +30,14 @@ client.connect()
     lessonsCollection = db.collection('lesson');
     ordersCollection = db.collection('order');
     console.log('Connected to MongoDB Atlas');
-    getLessons();
+    // getLessons();
 
 }).
 catch((err)=>{
     console.log(err);
 })
+
+// middleware
+app.use(express.static('public'));
+app.use(morgan('dev'));
+app.use(bodyParser.json());
