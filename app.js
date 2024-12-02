@@ -56,6 +56,9 @@ app.get('/lessons', async (req, res)=>{
         res.sendStatus(500);
     }
 })
+
+// full text search feature
+
 app.get('/search', async (req, res)=>{
     const query = req.query.query.toLowerCase();
     if(!query){
@@ -77,6 +80,9 @@ app.get('/search', async (req, res)=>{
     }
     
 })
+
+// create order
+
 app.post('/order', async (req, res) => {
     const newOrder = req.body;
     console.log('Received new order:', newOrder);
@@ -91,5 +97,35 @@ app.post('/order', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).send('Error creating order');
+    }
+})
+
+// update lesson
+app.put('/lessons', async (req,res) => {
+    const updatedLessons = req.body;
+    
+    try{
+        // bulk operations for updating lessons
+        const bulkOps = updatedLessons.map(lesson => { 
+            const { id, _id, ...fieldsToUpdate } = lesson; 
+            // Extract id, _id and fields to update 
+            return { 
+                updateOne: { 
+                    filter: { id }, 
+                    update: { $set: fieldsToUpdate } 
+                    // Use $set to update only provided fields excluding _id 
+                    } 
+                }; 
+            });
+
+        // Execute the bulk write operations
+        const result = await lessonsCollection.bulkWrite(bulkOps);
+        console.log(result);
+        res.status(200).json(result);
+
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).send('Error updating lessons');
     }
 })
