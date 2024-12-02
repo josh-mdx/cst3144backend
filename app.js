@@ -77,3 +77,19 @@ app.get('/search', async (req, res)=>{
     }
     
 })
+app.post('/order', async (req, res) => {
+    const newOrder = req.body;
+    console.log('Received new order:', newOrder);
+    try {
+        const result = await ordersCollection.insertOne(newOrder);
+        console.log('inserted order result', result);
+        if(result.insertedId){
+            const insertedOrder = await ordersCollection.findOne({ _id: result.insertedId }); 
+            res.status(201).json(insertedOrder);
+        }
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Error creating order');
+    }
+})
